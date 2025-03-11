@@ -6,15 +6,17 @@ project(${PROJECT_NAME})
 
 set(RAYLIB_PATH ${PROJECT_SOURCE_DIR}/raylib)
 include_directories(${RAYLIB_PATH}/include include)
-link_directories(${RAYLIB_PATH}/lib)
 
 add_executable(${PROJECT_NAME} src/main.cpp src/PingPong.cpp)
 
 if (WIN32)
-    target_link_libraries(${PROJECT_NAME} raylib)
+    link_directories(${RAYLIB_PATH}/lib/win)
+    target_link_libraries(${PROJECT_NAME} ${RAYLIB_PATH}/lib/win/libraylib.a)
+
     target_link_libraries(${PROJECT_NAME} opengl32 gdi32 winmm)
 elseif (APPLE)
-    target_link_libraries(${PROJECT_NAME} ${RAYLIB_PATH}/lib/libraylib.a)
+    link_directories(${RAYLIB_PATH}/lib/macos)
+    target_link_libraries(${PROJECT_NAME} ${RAYLIB_PATH}/lib/macos/libraylib.a)
 
     find_library(COCOA_LIBRARY Cocoa REQUIRED)
     find_library(IOKIT_LIBRARY IOKit REQUIRED)
