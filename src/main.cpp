@@ -1,4 +1,4 @@
-#include <GameBase.h>
+#include <framework/GameBase.h>
 #include <PingPong.h>
 #include "raylib.h"
 
@@ -17,7 +17,7 @@ int main()
 
     while (!WindowShouldClose())
     {
-        game->UpdateGame();
+        game->UpdateGame(GetFrameTime());
         game->DrawGame();
     }
 

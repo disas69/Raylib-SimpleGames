@@ -7,7 +7,9 @@ project(${PROJECT_NAME})
 set(RAYLIB_PATH ${PROJECT_SOURCE_DIR}/raylib)
 include_directories(${RAYLIB_PATH}/include include)
 
-add_executable(${PROJECT_NAME} src/main.cpp src/PingPong.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp
+        src/PingPong.cpp
+)
 
 if (WIN32)
     link_directories(${RAYLIB_PATH}/lib/win)
