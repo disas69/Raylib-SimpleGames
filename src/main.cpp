@@ -1,6 +1,7 @@
-#include <framework/GameBase.h>
-#include <PingPong.h>
-#include "raylib.h"
+#include "framework/GameBase.h"
+#include "PingPong.h"
+#include "Asteroids.h"
+#include <raylib.h>
 
 int main()
 {

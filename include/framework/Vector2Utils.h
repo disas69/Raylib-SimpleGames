@@ -30,6 +30,11 @@ namespace Vector2Utils
         return {vector.x * scalar, vector.y * scalar};
     }
 
+    inline Vector2 Subtract(const Vector2 a, const Vector2 b)
+    {
+        return {a.x - b.x, a.y - b.y};
+    }
+
     inline Vector2 Reflect(const Vector2 vector, const Vector2 normal)
     {
         auto [x, y] = Scale(normal, 2 * DotProduct(vector, normal));

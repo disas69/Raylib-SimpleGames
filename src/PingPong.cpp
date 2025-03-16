@@ -77,7 +77,6 @@ void PingPong::ResetGame()
 
 void PingPong::UpdateBall(const float deltaTime)
 {
-
     Vector2 ballPosition = ball->GetPosition();
     float x = ballPosition.x + ballDirection.x * PingPongSettings::BallSpeed * deltaTime;
     float y = ballPosition.y + ballDirection.y * PingPongSettings::BallSpeed * deltaTime;
@@ -100,13 +99,15 @@ void PingPong::UpdateBall(const float deltaTime)
         return;
     }
 
-    if (ballDirection.x < 0 && CheckCollisionCircleRec(ballPosition, radius, localPlayer->GetRectangle()))
+    if (ballDirection.x < 0 && CheckCollisionCircleRec(ballPosition, radius, localPlayer->GetRectangle()) && ballPosition.x > localPlayer->GetPosition().x)
     {
-        ballDirection = Vector2Utils::Reflect(ballDirection, {1, 0});
+        const Vector2 normal = {-1, 0};
+        ballDirection = Vector2Utils::Reflect(ballDirection, normal);
     }
-    else if (ballDirection.x > 0 && CheckCollisionCircleRec(ballPosition, radius, botPlayer->GetRectangle()))
+    else if (ballDirection.x > 0 && CheckCollisionCircleRec(ballPosition, radius, botPlayer->GetRectangle()) && ballPosition.x < botPlayer->GetPosition().x)
     {
-        ballDirection = Vector2Utils::Reflect(ballDirection, {1, 0});
+        const Vector2 normal = {1, 0};
+        ballDirection = Vector2Utils::Reflect(ballDirection, normal);
     }
 
     ball->SetPosition({x, y});

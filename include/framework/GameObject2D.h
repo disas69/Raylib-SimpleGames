@@ -25,6 +25,16 @@ public:
         return {transform.translation.x, transform.translation.y};
     }
 
+    Quaternion GetRotation() const
+    {
+        return transform.rotation;
+    }
+
+    void SetRotation(const Quaternion& rotation)
+    {
+        transform.rotation = rotation;
+    }
+
     void SetColor(const Color& color)
     {
         this->color = color;
