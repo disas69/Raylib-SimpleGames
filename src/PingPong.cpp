@@ -69,8 +69,15 @@ void PingPong::ResetGame()
 {
     ball->SetPosition({screenWidth / 2, screenHeight / 2});
 
-    const Vector2 rDirection = Vector2Utils::GetRandom(-0.8f, 0.8f, -0.2f, 0.2f);
-    ballDirection = Vector2Utils::Normalize(rDirection);
+    int random = GetRandomValue(0, 1);
+    if (random == 0)
+    {
+        ballDirection = Vector2Utils::Normalize({1, 0});
+    }
+    else
+    {
+        ballDirection = Vector2Utils::Normalize({-1, 0});
+    }
 
     startTimer = GetTime();
 }
@@ -101,12 +108,18 @@ void PingPong::UpdateBall(const float deltaTime)
 
     if (ballDirection.x < 0 && CheckCollisionCircleRec(ballPosition, radius, localPlayer->GetRectangle()) && ballPosition.x > localPlayer->GetPosition().x)
     {
-        const Vector2 normal = {-1, 0};
+        float halfSize = localPlayer->GetRectangle().height / 2;
+        float playerCenter = localPlayer->GetPosition().y + halfSize;
+        float relativeY = (ballPosition.y - playerCenter) / halfSize;
+        const Vector2 normal = Vector2Utils::Normalize({1, 0.2f * relativeY});
         ballDirection = Vector2Utils::Reflect(ballDirection, normal);
     }
     else if (ballDirection.x > 0 && CheckCollisionCircleRec(ballPosition, radius, botPlayer->GetRectangle()) && ballPosition.x < botPlayer->GetPosition().x)
     {
-        const Vector2 normal = {1, 0};
+        float halfSize = botPlayer->GetRectangle().height / 2;
+        float playerCenter = botPlayer->GetPosition().y + halfSize;
+        float relativeY = (ballPosition.y - playerCenter) / halfSize;
+        const Vector2 normal = Vector2Utils::Normalize({-1, 0.2f * relativeY});
         ballDirection = Vector2Utils::Reflect(ballDirection, normal);
     }
 
@@ -138,7 +151,7 @@ void PingPong::UpdateBotPlayer(const float deltaTime) const
     Vector2 ballPosition = ball->GetPosition();
 
     // Try to follow the ball
-    if (ballPosition.x > screenWidth / 2)
+    if (ballPosition.x > screenWidth / 2 && ballDirection.x > 0)
     {
         if (ballPosition.y < botPlayer->GetPosition().y)
         {
