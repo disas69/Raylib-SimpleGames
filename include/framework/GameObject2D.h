@@ -6,33 +6,32 @@
 class GameObject2D
 {
 public:
-    GameObject2D() : transform{0.f, 0.f, 0.f}, color{WHITE} {}
-    explicit GameObject2D(const Vector2& position) : transform{position.x, position.y, 0.f}, color{WHITE} {}
-    explicit GameObject2D(const Color& color) : transform{0.f, 0.f, 0.f}, color(color) {}
-    GameObject2D(const Vector2& position, const Color& color) : transform{position.x, position.y, 0.f}, color(color) {}
+    GameObject2D() : position({0.f, 0.f}), color{WHITE} {}
+    explicit GameObject2D(const Vector2 pos) : position(pos), color{WHITE} {}
+    explicit GameObject2D(const Color& color) : position({0.f, 0.f}), color(color) {}
+    GameObject2D(const Vector2 position, const Color& color) : position({0.f, 0.f}), color(color) {}
 
     virtual void Draw() const = 0;
     virtual ~GameObject2D() = default;
 
-    void SetPosition(const Vector2& position)
+    void SetPosition(const Vector2 position)
     {
-        transform.translation.x = position.x;
-        transform.translation.y = position.y;
+        this->position = position;
     }
 
     Vector2 GetPosition() const
     {
-        return {transform.translation.x, transform.translation.y};
+        return position;
     }
 
-    Quaternion GetRotation() const
+    float GetRotation() const
     {
-        return transform.rotation;
+        return rotation;
     }
 
-    void SetRotation(const Quaternion& rotation)
+    void SetRotation(const float rotation)
     {
-        transform.rotation = rotation;
+        this->rotation = rotation;
     }
 
     void SetColor(const Color& color)
@@ -46,7 +45,8 @@ public:
     }
 
 protected:
-    Transform transform;
+    Vector2 position = {0.f, 0.f};
+    float rotation = 0;
     Color color;
 };
 

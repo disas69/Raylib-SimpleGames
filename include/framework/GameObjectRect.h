@@ -10,16 +10,16 @@ public:
     GameObjectRect() : GameObject2D(), width(0), height(0) {}
     GameObjectRect(const Color& color, const int width, const int height) : GameObject2D(color), width(width), height(height) {}
     GameObjectRect(const int width, const int height) : GameObject2D(), width(width), height(height) {}
-    GameObjectRect(const Vector2& position, const Color& color, const int width, const int height) : GameObject2D(position, color), width(width), height(height) {}
+    GameObjectRect(const Vector2 position, const Color& color, const int width, const int height) : GameObject2D(position, color), width(width), height(height) {}
 
     void Draw() const override
     {
-        DrawRectangleRec(GetRectangle(), color);
+        DrawRectanglePro(GetRectangle(), {0.f, 0.f}, rotation, color);
     }
 
     Rectangle GetRectangle() const
     {
-        return {transform.translation.x, transform.translation.y, static_cast<float>(width), static_cast<float>(height)};
+        return {position.x, position.y, static_cast<float>(width), static_cast<float>(height)};
     }
 
 private:

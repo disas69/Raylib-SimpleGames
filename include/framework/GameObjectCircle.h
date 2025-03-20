@@ -13,7 +13,7 @@ public:
 
     void Draw() const override
     {
-        DrawCircleV({transform.translation.x, transform.translation.y}, radius, color);
+        DrawCircleV({position.x, position.y}, radius, color);
     }
 
     float GetRadius() const
