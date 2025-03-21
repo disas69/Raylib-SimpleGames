@@ -1,7 +1,7 @@
 ﻿#include "PingPong.h"
 #include "framework/GameObjectRect.h"
 #include "framework/GameObjectCircle.h"
-#include "framework/Vector2Utils.h"
+#include <raymath.h>
 #include <raylib.h>
 
 namespace PingPongSettings
@@ -72,11 +72,11 @@ void PingPong::ResetGame()
     int random = GetRandomValue(0, 1);
     if (random == 0)
     {
-        m_ballDirection = Vector2Utils::Normalize({1, 0});
+        m_ballDirection = Vector2Normalize({1, 0});
     }
     else
     {
-        m_ballDirection = Vector2Utils::Normalize({-1, 0});
+        m_ballDirection = Vector2Normalize({-1, 0});
     }
 
     m_startTimer = GetTime();
@@ -91,7 +91,7 @@ void PingPong::UpdateBall(const float deltaTime)
     float radius = m_ball->GetRadius();
     if (y - radius <= 0 || y + radius >= m_screenHeight)
     {
-        m_ballDirection = Vector2Utils::Reflect(m_ballDirection, {0, 1});
+        m_ballDirection = Vector2Reflect(m_ballDirection, {0, 1});
     }
     else if (x - radius <= 0)
     {
@@ -111,16 +111,16 @@ void PingPong::UpdateBall(const float deltaTime)
         float halfSize = m_localPlayer->GetRectangle().height / 2;
         float playerCenter = m_localPlayer->GetPosition().y + halfSize;
         float relativeY = (ballPosition.y - playerCenter) / halfSize;
-        const Vector2 normal = Vector2Utils::Normalize({1, 0.2f * relativeY});
-        m_ballDirection = Vector2Utils::Reflect(m_ballDirection, normal);
+        const Vector2 normal = Vector2Normalize({1, 0.2f * relativeY});
+        m_ballDirection = Vector2Reflect(m_ballDirection, normal);
     }
     else if (m_ballDirection.x > 0 && CheckCollisionCircleRec(ballPosition, radius, m_botPlayer->GetRectangle()) && ballPosition.x < m_botPlayer->GetPosition().x)
     {
         float halfSize = m_botPlayer->GetRectangle().height / 2;
         float playerCenter = m_botPlayer->GetPosition().y + halfSize;
         float relativeY = (ballPosition.y - playerCenter) / halfSize;
-        const Vector2 normal = Vector2Utils::Normalize({-1, 0.2f * relativeY});
-        m_ballDirection = Vector2Utils::Reflect(m_ballDirection, normal);
+        const Vector2 normal = Vector2Normalize({-1, 0.2f * relativeY});
+        m_ballDirection = Vector2Reflect(m_ballDirection, normal);
     }
 
     m_ball->SetPosition({x, y});
