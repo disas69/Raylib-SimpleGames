@@ -1,5 +1,4 @@
-﻿#ifndef ASTEROIDS_H
-#define ASTEROIDS_H
+﻿#pragma once
 
 #include "framework/GameBase.h"
 
@@ -14,10 +13,8 @@ public:
     void UnloadGame() override;
 
 private:
-    GameObjectRect* player = nullptr;
+    GameObjectRect* m_player = nullptr;
 
-    float screenWidth = 0;
-    float screenHeight = 0;
+    float m_screenWidth = 0;
+    float m_screenHeight = 0;
 };
-
-#endif //ASTEROIDS_H

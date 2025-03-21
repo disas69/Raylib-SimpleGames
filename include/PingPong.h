@@ -1,5 +1,4 @@
-﻿#ifndef PINGPONG_H
-#define PINGPONG_H
+﻿#pragma once
 
 #include "framework/GameBase.h"
 #include <raylib.h>
@@ -16,25 +15,23 @@ public:
     void UnloadGame() override;
 
 private:
-    GameObjectRect* localPlayer = nullptr;
-    GameObjectRect* botPlayer = nullptr;
-    GameObjectCircle* ball = nullptr;
+    GameObjectRect* m_localPlayer = nullptr;
+    GameObjectRect* m_botPlayer = nullptr;
+    GameObjectCircle* m_ball = nullptr;
 
-    Vector2 ballDirection = {0.f, 0.f};
+    Vector2 m_ballDirection = {0.f, 0.f};
 
-    float screenWidth = 0;
-    float screenHeight = 0;
+    float m_screenWidth = 0;
+    float m_screenHeight = 0;
 
-    int localPlayerScore = 0;
-    int botPlayerScore = 0;
+    int m_localPlayerScore = 0;
+    int m_botPlayerScore = 0;
 
-    int startDelay = 1;
-    float startTimer = 0;
+    int m_startDelay = 1;
+    float m_startTimer = 0;
 
     void ResetGame();
     void UpdateBall(float deltaTime);
     void UpdateLocalPlayer(float deltaTime) const;
     void UpdateBotPlayer(float deltaTime) const;
 };
-
-#endif  // PINGPONG_H

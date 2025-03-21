@@ -1,53 +1,29 @@
-﻿#ifndef GAMEOBJECT_H
-#define GAMEOBJECT_H
+﻿#pragma once
 
 #include <raylib.h>
 
 class GameObject2D
 {
 public:
-    GameObject2D() : position({0.f, 0.f}), color{WHITE} {}
-    explicit GameObject2D(const Vector2 pos) : position(pos), color{WHITE} {}
-    explicit GameObject2D(const Color& color) : position({0.f, 0.f}), color(color) {}
-    GameObject2D(const Vector2 position, const Color& color) : position({0.f, 0.f}), color(color) {}
+    GameObject2D() : m_position({0.f, 0.f}) {}
+    explicit GameObject2D(const Vector2& position) : m_position(position) {}
+    explicit GameObject2D(const Color& color) : m_position({0.f, 0.f}), m_color(color) {}
+    GameObject2D(const Vector2& position, const Color& color) : m_position(position), m_color(color) {}
 
     virtual void Draw() const = 0;
     virtual ~GameObject2D() = default;
 
-    void SetPosition(const Vector2 position)
-    {
-        this->position = position;
-    }
+    void SetPosition(const Vector2 position) { this->m_position = position; }
+    Vector2 GetPosition() const { return m_position; }
 
-    Vector2 GetPosition() const
-    {
-        return position;
-    }
+    float GetRotation() const { return m_rotation; }
+    void SetRotation(const float rotation) { this->m_rotation = rotation; }
 
-    float GetRotation() const
-    {
-        return rotation;
-    }
-
-    void SetRotation(const float rotation)
-    {
-        this->rotation = rotation;
-    }
-
-    void SetColor(const Color& color)
-    {
-        this->color = color;
-    }
-
-    Color GetColor() const
-    {
-        return color;
-    }
+    void SetColor(const Color& color) { this->m_color = color; }
+    Color GetColor() const { return m_color; }
 
 protected:
-    Vector2 position = {0.f, 0.f};
-    float rotation = 0;
-    Color color;
+    Vector2 m_position = {0.f, 0.f};
+    float m_rotation = 0;
+    Color m_color = WHITE;
 };
-
-#endif //GAMEOBJECT_H

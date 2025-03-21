@@ -1,26 +1,23 @@
 ﻿#include "Asteroids.h"
 #include "framework/GameObjectRect.h"
-#include "framework/Vector2Utils.h"
 
 namespace AsteroidsSettings
 {
-constexpr int PlayerWidth = 20;
-constexpr int PlayerHeight = 40;
-constexpr int PlayerSpeed = 180;
-}  // namespace
+constexpr int PLAYER_WIDTH = 20;
+constexpr int PLAYER_HEIGHT = 40;
+constexpr int PLAYER_SPEED = 180;
+}  // namespace AsteroidsSettings
 
 void Asteroids::InitGame()
 {
-    screenWidth = GetScreenWidth();
-    screenHeight = GetScreenHeight();
+    m_screenWidth = GetScreenWidth();
+    m_screenHeight = GetScreenHeight();
 
-    player = new GameObjectRect(BLACK, AsteroidsSettings::PlayerWidth, AsteroidsSettings::PlayerHeight);
-    player->SetPosition({screenWidth / 2.f, screenHeight / 2.f});
+    m_player = new GameObjectRect(BLACK, AsteroidsSettings::PLAYER_WIDTH, AsteroidsSettings::PLAYER_HEIGHT);
+    m_player->SetPosition({m_screenWidth / 2.f, m_screenHeight / 2.f});
 }
 
-void Asteroids::UpdateGame(float deltaTime)
-{
-}
+void Asteroids::UpdateGame(float deltaTime) {}
 
 void Asteroids::DrawGame()
 {
@@ -30,12 +27,12 @@ void Asteroids::DrawGame()
     ClearBackground(RAYWHITE);
 
     // Draw player
-    player->Draw();
+    m_player->Draw();
 
     EndDrawing();
 }
 
 void Asteroids::UnloadGame()
 {
-    delete player;
+    delete m_player;
 }
