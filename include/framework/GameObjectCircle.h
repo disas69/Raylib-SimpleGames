@@ -10,7 +10,10 @@ public:
     explicit GameObjectCircle(const float radius) : m_radius(radius) {}
     GameObjectCircle(const Vector2& position, const Color& color, const float radius) : GameObject2D(position, color), m_radius(radius) {}
 
-    void Draw() const override { DrawCircleV({m_position.x, m_position.y}, m_radius, m_color); }
+    void Draw() const override
+    {
+        DrawCircleV({m_position.x, m_position.y}, m_radius, m_color);
+    }
 
     float GetRadius() const { return m_radius; }
 

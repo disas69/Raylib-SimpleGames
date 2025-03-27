@@ -19,10 +19,10 @@ void PingPong::InitGame()
     m_screenHeight = GetScreenHeight();
 
     m_localPlayer = new GameObjectRect(BLUE, PingPongSettings::PLAYER_WIDTH, PingPongSettings::PLAYER_HEIGHT);
-    m_localPlayer->SetPosition({50.f, m_screenHeight / 2 - PingPongSettings::PLAYER_HEIGHT / 2});
+    m_localPlayer->SetPosition({PingPongSettings::PLAYER_WIDTH / 2 + 25, m_screenHeight / 2 - PingPongSettings::PLAYER_HEIGHT / 2});
 
     m_botPlayer = new GameObjectRect(RED, PingPongSettings::PLAYER_WIDTH, PingPongSettings::PLAYER_HEIGHT);
-    m_botPlayer->SetPosition({m_screenWidth - 50.f - PingPongSettings::PLAYER_WIDTH, m_screenHeight / 2 - PingPongSettings::PLAYER_HEIGHT / 2});
+    m_botPlayer->SetPosition({m_screenWidth - PingPongSettings::PLAYER_WIDTH / 2 - 25, m_screenHeight / 2 - PingPongSettings::PLAYER_HEIGHT / 2});
 
     m_ball = new GameObjectCircle(DARKGRAY, PingPongSettings::BALL_RADIUS);
     ResetGame();
@@ -69,7 +69,7 @@ void PingPong::ResetGame()
 {
     m_ball->SetPosition({m_screenWidth / 2, m_screenHeight / 2});
 
-    int random = GetRandomValue(0, 1);
+    const int random = GetRandomValue(0, 1);
     if (random == 0)
     {
         m_ballDirection = Vector2Normalize({1, 0});
@@ -84,11 +84,11 @@ void PingPong::ResetGame()
 
 void PingPong::UpdateBall(const float deltaTime)
 {
-    Vector2 ballPosition = m_ball->GetPosition();
-    float x = ballPosition.x + m_ballDirection.x * PingPongSettings::BALL_SPEED * deltaTime;
-    float y = ballPosition.y + m_ballDirection.y * PingPongSettings::BALL_SPEED * deltaTime;
+    const Vector2 ballPosition = m_ball->GetPosition();
+    const float x = ballPosition.x + m_ballDirection.x * PingPongSettings::BALL_SPEED * deltaTime;
+    const float y = ballPosition.y + m_ballDirection.y * PingPongSettings::BALL_SPEED * deltaTime;
 
-    float radius = m_ball->GetRadius();
+    const float radius = m_ball->GetRadius();
     if (y - radius <= 0 || y + radius >= m_screenHeight)
     {
         m_ballDirection = Vector2Reflect(m_ballDirection, {0, 1});
@@ -108,17 +108,17 @@ void PingPong::UpdateBall(const float deltaTime)
 
     if (m_ballDirection.x < 0 && CheckCollisionCircleRec(ballPosition, radius, m_localPlayer->GetRectangle()) && ballPosition.x > m_localPlayer->GetPosition().x)
     {
-        float halfSize = m_localPlayer->GetRectangle().height / 2;
-        float playerCenter = m_localPlayer->GetPosition().y + halfSize;
-        float relativeY = (ballPosition.y - playerCenter) / halfSize;
+        const float halfSize = m_localPlayer->GetRectangle().height / 2;
+        const float playerCenter = m_localPlayer->GetPosition().y;
+        const float relativeY = (ballPosition.y - playerCenter) / halfSize;
         const Vector2 normal = Vector2Normalize({1, 0.2f * relativeY});
         m_ballDirection = Vector2Reflect(m_ballDirection, normal);
     }
     else if (m_ballDirection.x > 0 && CheckCollisionCircleRec(ballPosition, radius, m_botPlayer->GetRectangle()) && ballPosition.x < m_botPlayer->GetPosition().x)
     {
-        float halfSize = m_botPlayer->GetRectangle().height / 2;
-        float playerCenter = m_botPlayer->GetPosition().y + halfSize;
-        float relativeY = (ballPosition.y - playerCenter) / halfSize;
+        const float halfSize = m_botPlayer->GetRectangle().height / 2;
+        const float playerCenter = m_botPlayer->GetPosition().y;
+        const float relativeY = (ballPosition.y - playerCenter) / halfSize;
         const Vector2 normal = Vector2Normalize({-1, 0.2f * relativeY});
         m_ballDirection = Vector2Reflect(m_ballDirection, normal);
     }
@@ -128,17 +128,19 @@ void PingPong::UpdateBall(const float deltaTime)
 
 void PingPong::UpdateLocalPlayer(const float deltaTime) const
 {
-    Rectangle localPlayerRect = m_localPlayer->GetRectangle();
+    const Rectangle localPlayerRect = m_localPlayer->GetRectangle();
     Vector2 newPosition = {m_localPlayer->GetPosition().x, GetMousePosition().y - localPlayerRect.height / 2};
 
+    const float halfHeight = localPlayerRect.height / 2.f;
+
     // Clamp player position to screen
-    if (newPosition.y < 0)
+    if (newPosition.y - halfHeight < 0)
     {
-        newPosition.y = 0;
+        newPosition.y = halfHeight;
     }
-    else if (newPosition.y + localPlayerRect.height > m_screenHeight)
+    else if (newPosition.y + halfHeight > m_screenHeight)
     {
-        newPosition.y = m_screenHeight - localPlayerRect.height;
+        newPosition.y = m_screenHeight - halfHeight;
     }
 
     m_localPlayer->SetPosition(newPosition);
@@ -146,9 +148,9 @@ void PingPong::UpdateLocalPlayer(const float deltaTime) const
 
 void PingPong::UpdateBotPlayer(const float deltaTime) const
 {
-    Rectangle botPlayerRect = m_botPlayer->GetRectangle();
+    const Rectangle botPlayerRect = m_botPlayer->GetRectangle();
     Vector2 newPosition = m_botPlayer->GetPosition();
-    Vector2 ballPosition = m_ball->GetPosition();
+    const Vector2 ballPosition = m_ball->GetPosition();
 
     // Try to follow the ball
     if (ballPosition.x > m_screenWidth / 2 && m_ballDirection.x > 0)
@@ -163,14 +165,16 @@ void PingPong::UpdateBotPlayer(const float deltaTime) const
         }
     }
 
+    const float halfHeight = botPlayerRect.height / 2.f;
+
     // Clamp player position to screen
-    if (newPosition.y < 0)
+    if (newPosition.y - halfHeight < 0)
     {
-        newPosition.y = 0;
+        newPosition.y = halfHeight;
     }
-    else if (newPosition.y + botPlayerRect.height > m_screenHeight)
+    else if (newPosition.y + halfHeight > m_screenHeight)
     {
-        newPosition.y = m_screenHeight - botPlayerRect.height;
+        newPosition.y = m_screenHeight - halfHeight;
     }
 
     m_botPlayer->SetPosition(newPosition);

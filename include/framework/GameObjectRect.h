@@ -13,7 +13,12 @@ public:
 
     void Draw() const override { DrawRectanglePro(GetRectangle(), {0.f, 0.f}, m_rotation, m_color); }
 
-    Rectangle GetRectangle() const { return {m_position.x, m_position.y, static_cast<float>(m_width), static_cast<float>(m_height)}; }
+    Rectangle GetRectangle() const
+    {
+        const float width = static_cast<float>(m_width);
+        const float height = static_cast<float>(m_height);
+        return {m_position.x - width / 2, m_position.y - height / 2, width, height};
+    }
 
 private:
     int m_width = 0;

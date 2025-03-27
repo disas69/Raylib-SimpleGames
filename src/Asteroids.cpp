@@ -1,5 +1,6 @@
 ﻿#include "Asteroids.h"
 #include "framework/GameObjectRect.h"
+#include <raymath.h>
 
 namespace AsteroidsSettings
 {
@@ -17,7 +18,16 @@ void Asteroids::InitGame()
     m_player->SetPosition({m_screenWidth / 2.f, m_screenHeight / 2.f});
 }
 
-void Asteroids::UpdateGame(float deltaTime) {}
+void Asteroids::UpdateGame(float deltaTime)
+{
+    Vector2 mousePosition = GetMousePosition();
+    Vector2 playerPosition = m_player->GetPosition();
+    Vector2 direction = Vector2Normalize(Vector2Subtract(mousePosition, playerPosition));
+
+    float angle = Vector2Angle({1, 0}, direction);
+
+    m_player->SetRotation(angle * RAD2DEG);
+}
 
 void Asteroids::DrawGame()
 {
