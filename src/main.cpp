@@ -13,7 +13,7 @@ int main()
     SetWindowState(FLAG_VSYNC_HINT);
     SetTargetFPS(60);
 
-    GameBase* game = new PingPong();
+    GameBase* game = new Asteroids();
     game->InitGame();
 
     while (!WindowShouldClose())
