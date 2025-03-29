@@ -14,7 +14,12 @@ add_executable(${PROJECT_NAME} src/main.cpp
 
 if (WIN32)
     link_directories(${RAYLIB_PATH}/lib/win)
-    target_link_libraries(${PROJECT_NAME} ${RAYLIB_PATH}/lib/win/libraylib.a)
+
+    if (MSVC)
+        target_link_libraries(${PROJECT_NAME} ${RAYLIB_PATH}/lib/win/raylib.lib)
+    else ()
+        target_link_libraries(${PROJECT_NAME} ${RAYLIB_PATH}/lib/win/libraylib.a)
+    endif ()
 
     target_link_libraries(${PROJECT_NAME} opengl32 gdi32 winmm)
 elseif (APPLE)
