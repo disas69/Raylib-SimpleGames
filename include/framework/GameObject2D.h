@@ -13,6 +13,9 @@ public:
     virtual void Draw() const = 0;
     virtual ~GameObject2D() = default;
 
+    void SetActive(const bool isActive) { this->m_isActive = isActive; }
+    bool IsActive() const { return m_isActive; }
+
     void SetPosition(const Vector2 position) { this->m_position = position; }
     Vector2 GetPosition() const { return m_position; }
 
@@ -26,4 +29,5 @@ protected:
     Vector2 m_position = {0.f, 0.f};
     float m_rotation = 0;
     Color m_color = WHITE;
+    bool m_isActive = true;
 };

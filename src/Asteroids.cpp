@@ -1,5 +1,6 @@
 ﻿#include "Asteroids.h"
 #include "framework/GameObjectRect.h"
+#include "framework/GameObjectCircle.h"
 #include <raymath.h>
 
 namespace AsteroidsSettings
@@ -8,6 +9,7 @@ constexpr int PLAYER_WIDTH = 20;
 constexpr int PLAYER_HEIGHT = 40;
 constexpr int PLAYER_SPEED = 180;
 constexpr int PLAYER_ACCELERATION = 60;
+constexpr int BULLET_SPEED = 600;
 }  // namespace AsteroidsSettings
 
 void Asteroids::InitGame()
@@ -17,6 +19,9 @@ void Asteroids::InitGame()
 
     m_player = new GameObjectRect(BLACK, AsteroidsSettings::PLAYER_WIDTH, AsteroidsSettings::PLAYER_HEIGHT);
     m_player->SetPosition({m_screenWidth / 2.f, m_screenHeight / 2.f});
+
+    m_bullet = new GameObjectCircle(DARKGRAY, 6);
+    m_bullet->SetActive(false);
 }
 
 void Asteroids::UpdateGame(float deltaTime)
@@ -81,6 +86,25 @@ void Asteroids::UpdateGame(float deltaTime)
     }
 
     m_player->SetPosition(newPosition);
+
+    // Shoot bullet
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    {
+        ShootBullet(playerPosition, direction);
+    }
+
+    // Update bullet
+    if (m_bullet->IsActive())
+    {
+        Vector2 bulletPosition = m_bullet->GetPosition();
+        bulletPosition = Vector2Add(bulletPosition, Vector2Scale(m_bulletDirection, AsteroidsSettings::BULLET_SPEED * deltaTime));
+        m_bullet->SetPosition(bulletPosition);
+
+        if (bulletPosition.x > m_screenWidth || bulletPosition.x < 0 || bulletPosition.y > m_screenHeight || bulletPosition.y < 0)
+        {
+            m_bullet->SetActive(false);
+        }
+    }
 }
 
 void Asteroids::DrawGame()
@@ -91,6 +115,7 @@ void Asteroids::DrawGame()
     ClearBackground(RAYWHITE);
 
     // Draw player
+    m_bullet->Draw();
     m_player->Draw();
 
     EndDrawing();
@@ -99,6 +124,7 @@ void Asteroids::DrawGame()
 void Asteroids::UnloadGame()
 {
     delete m_player;
+    delete m_bullet;
 }
 
 Vector2 Asteroids::GetMovementDirection() const
@@ -126,4 +152,16 @@ Vector2 Asteroids::GetMovementDirection() const
     }
 
     return direction;
+}
+
+void Asteroids::ShootBullet(Vector2 position, Vector2 direction)
+{
+    if (m_bullet->IsActive())
+    {
+        return;
+    }
+
+    m_bullet->SetActive(true);
+    m_bullet->SetPosition(position);
+    m_bulletDirection = direction;
 }

@@ -12,6 +12,11 @@ public:
 
     void Draw() const override
     {
+        if (!m_isActive)
+        {
+            return;
+        }
+
         DrawCircleV({m_position.x, m_position.y}, m_radius, m_color);
     }
 

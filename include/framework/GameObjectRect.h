@@ -13,6 +13,11 @@ public:
 
     void Draw() const override
     {
+        if (!m_isActive)
+        {
+            return;
+        }
+
         const float width = static_cast<float>(m_width);
         const float height = static_cast<float>(m_height);
         const Vector2 origin = {width / 2, height / 2};
