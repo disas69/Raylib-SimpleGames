@@ -17,9 +17,10 @@ public:
             return;
         }
 
-        DrawCircleV({m_position.x, m_position.y}, m_radius, m_color);
+        DrawCircleV(m_position, m_radius, m_color);
     }
 
+    void SetRadius(const float radius) { this->m_radius = radius; }
     float GetRadius() const { return m_radius; }
 
 private:

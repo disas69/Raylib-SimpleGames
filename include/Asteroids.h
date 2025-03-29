@@ -1,10 +1,25 @@
 ﻿#pragma once
 
 #include "framework/GameBase.h"
+#include "framework/GameObjectCircle.h"
 #include <raylib.h>
 
-class GameObjectCircle;
 class GameObjectRect;
+
+class Bullet : public GameObjectCircle
+{
+public:
+    Bullet() = default;
+    void Init(const Color& color, float radius, float screenWidth, float screenHeight);
+    void Shoot(Vector2 position, Vector2 direction);
+    void Update(float deltaTime);
+
+private:
+    Vector2 m_direction = {0, 0};
+
+    float m_screenWidth = 0;
+    float m_screenHeight = 0;
+};
 
 class Asteroids : public GameBase
 {
@@ -16,13 +31,12 @@ public:
 
 private:
     GameObjectRect* m_player = nullptr;
-    GameObjectCircle* m_bullet = nullptr;
+    Bullet* m_bullets = nullptr;
 
     float m_screenWidth = 0;
     float m_screenHeight = 0;
 
     Vector2 m_lastMovementDirection = {0, 0};
-    Vector2 m_bulletDirection = {0, 0};
     float m_currentSpeed = 0;
     bool m_isMoving = false;
 

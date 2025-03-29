@@ -1,6 +1,5 @@
 ﻿#include "Asteroids.h"
 #include "framework/GameObjectRect.h"
-#include "framework/GameObjectCircle.h"
 #include <raymath.h>
 
 namespace AsteroidsSettings
@@ -9,19 +8,56 @@ constexpr int PLAYER_WIDTH = 20;
 constexpr int PLAYER_HEIGHT = 40;
 constexpr int PLAYER_SPEED = 180;
 constexpr int PLAYER_ACCELERATION = 60;
+constexpr int BULLETS_POOL_SIZE = 10;
 constexpr int BULLET_SPEED = 600;
 }  // namespace AsteroidsSettings
 
+// Bullet implementation
+void Bullet::Init(const Color& color, float radius, float screenWidth, float screenHeight)
+{
+    SetActive(false);
+    SetColor(color);
+    SetRadius(radius);
+    m_screenWidth = screenWidth;
+    m_screenHeight = screenHeight;
+}
+
+void Bullet::Shoot(Vector2 position, Vector2 direction)
+{
+    SetActive(true);
+    SetPosition(position);
+    m_direction = direction;
+}
+
+void Bullet::Update(float deltaTime)
+{
+    if (IsActive())
+    {
+        Vector2 bulletPosition = GetPosition();
+        bulletPosition = Vector2Add(bulletPosition, Vector2Scale(m_direction, AsteroidsSettings::BULLET_SPEED * deltaTime));
+        SetPosition(bulletPosition);
+
+        if (bulletPosition.x > m_screenWidth || bulletPosition.x < 0 || bulletPosition.y > m_screenHeight || bulletPosition.y < 0)
+        {
+            SetActive(false);
+        }
+    }
+}
+
+// Game implementation
 void Asteroids::InitGame()
 {
     m_screenWidth = GetScreenWidth();
     m_screenHeight = GetScreenHeight();
 
-    m_player = new GameObjectRect(BLACK, AsteroidsSettings::PLAYER_WIDTH, AsteroidsSettings::PLAYER_HEIGHT);
-    m_player->SetPosition({m_screenWidth / 2.f, m_screenHeight / 2.f});
+    m_player = new GameObjectRect(ORANGE, AsteroidsSettings::PLAYER_WIDTH, AsteroidsSettings::PLAYER_HEIGHT);
+    m_player->SetPosition({m_screenWidth / 2.f - AsteroidsSettings::PLAYER_WIDTH / 2.f, m_screenHeight / 2.f});
 
-    m_bullet = new GameObjectCircle(DARKGRAY, 6);
-    m_bullet->SetActive(false);
+    m_bullets = new Bullet[AsteroidsSettings::BULLETS_POOL_SIZE];
+    for (int i = 0; i < AsteroidsSettings::BULLETS_POOL_SIZE; ++i)
+    {
+        m_bullets[i].Init(BLUE, 6, m_screenWidth, m_screenHeight);
+    }
 }
 
 void Asteroids::UpdateGame(float deltaTime)
@@ -93,17 +129,10 @@ void Asteroids::UpdateGame(float deltaTime)
         ShootBullet(playerPosition, direction);
     }
 
-    // Update bullet
-    if (m_bullet->IsActive())
+    // Update bullets
+    for (int i = 0; i < AsteroidsSettings::BULLETS_POOL_SIZE; ++i)
     {
-        Vector2 bulletPosition = m_bullet->GetPosition();
-        bulletPosition = Vector2Add(bulletPosition, Vector2Scale(m_bulletDirection, AsteroidsSettings::BULLET_SPEED * deltaTime));
-        m_bullet->SetPosition(bulletPosition);
-
-        if (bulletPosition.x > m_screenWidth || bulletPosition.x < 0 || bulletPosition.y > m_screenHeight || bulletPosition.y < 0)
-        {
-            m_bullet->SetActive(false);
-        }
+        m_bullets[i].Update(deltaTime);
     }
 }
 
@@ -114,8 +143,12 @@ void Asteroids::DrawGame()
     // Draw playground
     ClearBackground(RAYWHITE);
 
-    // Draw player
-    m_bullet->Draw();
+    // Draw the game objects
+    for (int i = 0; i < AsteroidsSettings::BULLETS_POOL_SIZE; ++i)
+    {
+        m_bullets[i].Draw();
+    }
+
     m_player->Draw();
 
     EndDrawing();
@@ -124,7 +157,7 @@ void Asteroids::DrawGame()
 void Asteroids::UnloadGame()
 {
     delete m_player;
-    delete m_bullet;
+    delete[] m_bullets;
 }
 
 Vector2 Asteroids::GetMovementDirection() const
@@ -151,17 +184,24 @@ Vector2 Asteroids::GetMovementDirection() const
         direction.x = 1;
     }
 
-    return direction;
+    return Vector2Normalize(direction);
 }
 
 void Asteroids::ShootBullet(Vector2 position, Vector2 direction)
 {
-    if (m_bullet->IsActive())
+    Bullet* freeBullet = nullptr;
+
+    for (int i = 0; i < AsteroidsSettings::BULLETS_POOL_SIZE; ++i)
     {
-        return;
+        if (!m_bullets[i].IsActive())
+        {
+            freeBullet = &m_bullets[i];
+            break;
+        }
     }
 
-    m_bullet->SetActive(true);
-    m_bullet->SetPosition(position);
-    m_bulletDirection = direction;
+    if (freeBullet != nullptr)
+    {
+        freeBullet->Shoot(position, direction);
+    }
 }
