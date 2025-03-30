@@ -11,7 +11,7 @@ class Bullet : public GameObjectCircle
 public:
     Bullet() = default;
     void Init(const Color& color, float radius, float screenWidth, float screenHeight);
-    void Shoot(Vector2 position, Vector2 direction);
+    void Spawn(Vector2 position, Vector2 direction);
     void Update(float deltaTime);
 
 private:
@@ -19,6 +19,26 @@ private:
 
     float m_screenWidth = 0;
     float m_screenHeight = 0;
+};
+
+class Rock : public GameObjectCircle
+{
+public:
+    Rock() = default;
+    void Init(const Color& color, float screenWidth, float screenHeight);
+    void Spawn(int size, Vector2 position, Vector2 direction);
+    void Update(float deltaTime);
+    void Hit();
+
+    int GetSize() const { return m_size; }
+
+private:
+    Vector2 m_direction = {0, 0};
+
+    float m_screenWidth = 0;
+    float m_screenHeight = 0;
+
+    int m_size = 0;
 };
 
 class Asteroids : public GameBase
@@ -32,9 +52,13 @@ public:
 private:
     GameObjectRect* m_player = nullptr;
     Bullet* m_bullets = nullptr;
+    Rock* m_rocks = nullptr;
 
     float m_screenWidth = 0;
     float m_screenHeight = 0;
+
+    float m_time = 0;
+    float m_lastSpawnTime = 0;
 
     Vector2 m_lastMovementDirection = {0, 0};
     float m_currentSpeed = 0;
@@ -42,4 +66,5 @@ private:
 
     Vector2 GetMovementDirection() const;
     void ShootBullet(Vector2 position, Vector2 direction);
+    void SpawnRock();
 };

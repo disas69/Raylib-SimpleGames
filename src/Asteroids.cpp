@@ -10,6 +10,10 @@ constexpr int PLAYER_SPEED = 180;
 constexpr int PLAYER_ACCELERATION = 60;
 constexpr int BULLETS_POOL_SIZE = 10;
 constexpr int BULLET_SPEED = 600;
+constexpr int ROCKS_POOL_SIZE = 10;
+constexpr int ROCKS_START_COUNT = 5;
+constexpr int ROCKS_SPAWN_INTERVAL = 2;
+constexpr int ROCK_SPEED = 100;
 }  // namespace AsteroidsSettings
 
 // Bullet implementation
@@ -18,11 +22,12 @@ void Bullet::Init(const Color& color, float radius, float screenWidth, float scr
     SetActive(false);
     SetColor(color);
     SetRadius(radius);
+
     m_screenWidth = screenWidth;
     m_screenHeight = screenHeight;
 }
 
-void Bullet::Shoot(Vector2 position, Vector2 direction)
+void Bullet::Spawn(Vector2 position, Vector2 direction)
 {
     SetActive(true);
     SetPosition(position);
@@ -44,6 +49,72 @@ void Bullet::Update(float deltaTime)
     }
 }
 
+// Rock implementation
+void Rock::Init(const Color& color, float screenWidth, float screenHeight)
+{
+    SetActive(false);
+    SetColor(color);
+
+    m_screenWidth = screenWidth;
+    m_screenHeight = screenHeight;
+}
+
+void Rock::Spawn(int size, Vector2 position, Vector2 direction)
+{
+    SetActive(true);
+
+    m_size = size;
+    SetRadius(size * 10);
+
+    SetPosition(position);
+    m_direction = direction;
+}
+
+void Rock::Update(float deltaTime)
+{
+    if (IsActive())
+    {
+        Vector2 rockPosition = GetPosition();
+        rockPosition = Vector2Add(rockPosition, Vector2Scale(m_direction, AsteroidsSettings::ROCK_SPEED * deltaTime));
+
+        // Wrap around screen
+        const float radius = GetRadius();
+        if (rockPosition.x - radius > m_screenWidth)
+        {
+            rockPosition.x = 0;
+        }
+        else if (rockPosition.x + radius < 0)
+        {
+            rockPosition.x = m_screenWidth;
+        }
+
+        if (rockPosition.y - radius > m_screenHeight)
+        {
+            rockPosition.y = 0;
+        }
+        else if (rockPosition.y + radius < 0)
+        {
+            rockPosition.y = m_screenHeight;
+        }
+
+        SetPosition(rockPosition);
+    }
+}
+
+void Rock::Hit()
+{
+    m_size -= 1;
+
+    if (m_size <= 0)
+    {
+        SetActive(false);
+    }
+    else
+    {
+        SetRadius(m_size * 10);
+    }
+}
+
 // Game implementation
 void Asteroids::InitGame()
 {
@@ -58,10 +129,23 @@ void Asteroids::InitGame()
     {
         m_bullets[i].Init(BLUE, 6, m_screenWidth, m_screenHeight);
     }
+
+    m_rocks = new Rock[AsteroidsSettings::ROCKS_POOL_SIZE];
+    for (int i = 0; i < AsteroidsSettings::ROCKS_POOL_SIZE; ++i)
+    {
+        m_rocks[i].Init(DARKGRAY, m_screenWidth, m_screenHeight);
+    }
+
+    for (int i = 0; i < AsteroidsSettings::ROCKS_START_COUNT; ++i)
+    {
+        SpawnRock();
+    }
 }
 
 void Asteroids::UpdateGame(float deltaTime)
 {
+    m_time += deltaTime;
+
     // Rotate player towards mouse
     Vector2 mousePosition = GetMousePosition();
     Vector2 playerPosition = m_player->GetPosition();
@@ -123,6 +207,18 @@ void Asteroids::UpdateGame(float deltaTime)
 
     m_player->SetPosition(newPosition);
 
+    // Update rocks
+    if (m_time - m_lastSpawnTime > AsteroidsSettings::ROCKS_SPAWN_INTERVAL)
+    {
+        m_lastSpawnTime = m_time;
+        SpawnRock();
+    }
+
+    for (int i = 0; i < AsteroidsSettings::ROCKS_POOL_SIZE; ++i)
+    {
+        m_rocks[i].Update(deltaTime);
+    }
+
     // Shoot bullet
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
@@ -144,6 +240,11 @@ void Asteroids::DrawGame()
     ClearBackground(RAYWHITE);
 
     // Draw the game objects
+    for (int i = 0; i < AsteroidsSettings::ROCKS_POOL_SIZE; ++i)
+    {
+        m_rocks[i].Draw();
+    }
+
     for (int i = 0; i < AsteroidsSettings::BULLETS_POOL_SIZE; ++i)
     {
         m_bullets[i].Draw();
@@ -158,6 +259,7 @@ void Asteroids::UnloadGame()
 {
     delete m_player;
     delete[] m_bullets;
+    delete[] m_rocks;
 }
 
 Vector2 Asteroids::GetMovementDirection() const
@@ -202,6 +304,28 @@ void Asteroids::ShootBullet(Vector2 position, Vector2 direction)
 
     if (freeBullet != nullptr)
     {
-        freeBullet->Shoot(position, direction);
+        freeBullet->Spawn(position, direction);
+    }
+}
+
+void Asteroids::SpawnRock()
+{
+    Rock* freeRock = nullptr;
+
+    for (int i = 0; i < AsteroidsSettings::ROCKS_POOL_SIZE; ++i)
+    {
+        if (!m_rocks[i].IsActive())
+        {
+            freeRock = &m_rocks[i];
+            break;
+        }
+    }
+
+    if (freeRock != nullptr)
+    {
+        const int size = GetRandomValue(1, 3);
+        const Vector2 position = {GetRandomValue(0, static_cast<int>(m_screenWidth)), GetRandomValue(0, static_cast<int>(m_screenHeight))};
+        const Vector2 direction = {static_cast<float>(GetRandomValue(-1, 1)), static_cast<float>(GetRandomValue(-1, 1))};
+        freeRock->Spawn(size, position, Vector2Normalize(direction));
     }
 }
