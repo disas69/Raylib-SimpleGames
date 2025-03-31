@@ -4,8 +4,8 @@
 
 namespace AsteroidsSettings
 {
-constexpr int PLAYER_WIDTH = 20;
-constexpr int PLAYER_HEIGHT = 40;
+constexpr int PLAYER_WIDTH = 25;
+constexpr int PLAYER_HEIGHT = 25;
 constexpr int PLAYER_SPEED = 180;
 constexpr int PLAYER_ACCELERATION = 60;
 constexpr int BULLETS_POOL_SIZE = 10;
@@ -146,6 +146,15 @@ void Asteroids::UpdateGame(float deltaTime)
 {
     m_time += deltaTime;
 
+    if (m_isGameOver)
+    {
+        const float currentTime = GetTime();
+        if (currentTime - m_startTimer >= m_startDelay)
+        {
+            ResetGame();
+        }
+    }
+
     // Rotate player towards mouse
     Vector2 mousePosition = GetMousePosition();
     Vector2 playerPosition = m_player->GetPosition();
@@ -219,16 +228,46 @@ void Asteroids::UpdateGame(float deltaTime)
         m_rocks[i].Update(deltaTime);
     }
 
-    // Shoot bullet
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    // Update bullets
+    if (m_player->IsActive() && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
-        ShootBullet(playerPosition, direction);
+        SpawnBullet(playerPosition, direction);
     }
 
-    // Update bullets
     for (int i = 0; i < AsteroidsSettings::BULLETS_POOL_SIZE; ++i)
     {
         m_bullets[i].Update(deltaTime);
+    }
+
+    // Handle collisions
+    for (int i = 0; i < AsteroidsSettings::ROCKS_POOL_SIZE; ++i)
+    {
+        Rock& rock = m_rocks[i];
+
+        if (rock.IsActive())
+        {
+            if (CheckCollisionCircleRec(rock.GetPosition(), rock.GetRadius(), m_player->GetRectangle()))
+            {
+                GameOver();
+            }
+
+            for (int j = 0; j < AsteroidsSettings::BULLETS_POOL_SIZE; ++j)
+            {
+                Bullet& bullet = m_bullets[j];
+
+                if (bullet.IsActive() && CheckCollisionCircles(rock.GetPosition(), rock.GetRadius(), bullet.GetPosition(), bullet.GetRadius()))
+                {
+                    rock.Hit();
+
+                    if (rock.GetSize() == 0)
+                    {
+                        ++m_score;
+                    }
+
+                    bullet.SetActive(false);
+                }
+            }
+        }
     }
 }
 
@@ -238,6 +277,7 @@ void Asteroids::DrawGame()
 
     // Draw playground
     ClearBackground(RAYWHITE);
+    DrawText(TextFormat("%d", m_score), m_screenWidth / 2, 30, 40, LIGHTGRAY);
 
     // Draw the game objects
     for (int i = 0; i < AsteroidsSettings::ROCKS_POOL_SIZE; ++i)
@@ -289,7 +329,7 @@ Vector2 Asteroids::GetMovementDirection() const
     return Vector2Normalize(direction);
 }
 
-void Asteroids::ShootBullet(Vector2 position, Vector2 direction)
+void Asteroids::SpawnBullet(Vector2 position, Vector2 direction)
 {
     Bullet* freeBullet = nullptr;
 
@@ -324,8 +364,24 @@ void Asteroids::SpawnRock()
     if (freeRock != nullptr)
     {
         const int size = GetRandomValue(1, 3);
-        const Vector2 position = {GetRandomValue(0, static_cast<int>(m_screenWidth)), GetRandomValue(0, static_cast<int>(m_screenHeight))};
+        const Vector2 position = {static_cast<float>(GetRandomValue(0, static_cast<int>(m_screenWidth))), static_cast<float>(GetRandomValue(0, static_cast<int>(m_screenHeight)))};
         const Vector2 direction = {static_cast<float>(GetRandomValue(-1, 1)), static_cast<float>(GetRandomValue(-1, 1))};
         freeRock->Spawn(size, position, Vector2Normalize(direction));
     }
+}
+
+void Asteroids::GameOver()
+{
+    m_isGameOver = true;
+    m_player->SetActive(false);
+    m_startTimer = GetTime();
+}
+
+void Asteroids::ResetGame()
+{
+    m_isGameOver = false;
+    m_score = 0;
+    m_lastMovementDirection = {0.f, 0.f};
+    m_player->SetActive(true);
+    m_player->SetPosition({m_screenWidth / 2.f - AsteroidsSettings::PLAYER_WIDTH / 2.f, m_screenHeight / 2.f});
 }

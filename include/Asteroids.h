@@ -30,7 +30,7 @@ public:
     void Update(float deltaTime);
     void Hit();
 
-    int GetSize() const { return m_size; }
+    inline int GetSize() const { return m_size; }
 
 private:
     Vector2 m_direction = {0, 0};
@@ -59,12 +59,18 @@ private:
 
     float m_time = 0;
     float m_lastSpawnTime = 0;
+    int m_score = 0;
+    int m_startDelay = 1;
+    float m_startTimer = 0;
 
     Vector2 m_lastMovementDirection = {0, 0};
     float m_currentSpeed = 0;
     bool m_isMoving = false;
+    bool m_isGameOver = false;
 
     Vector2 GetMovementDirection() const;
-    void ShootBullet(Vector2 position, Vector2 direction);
+    void SpawnBullet(Vector2 position, Vector2 direction);
     void SpawnRock();
+    void GameOver();
+    void ResetGame();
 };
