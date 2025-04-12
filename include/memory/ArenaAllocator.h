@@ -35,7 +35,7 @@ public:
         return ptr;
     }
 
-    template<typename T, typename... Args>
+    template <typename T, typename... Args>
     T* Allocate(Args&&... args)
     {
         void* memory = Allocate(sizeof(T));
@@ -47,7 +47,7 @@ public:
         return nullptr;
     }
 
-    template<typename T, typename... Args>
+    template <typename T, typename... Args>
     T* AllocateArray(size_t size, Args&&... args)
     {
         void* memory = Allocate(sizeof(T) * size);

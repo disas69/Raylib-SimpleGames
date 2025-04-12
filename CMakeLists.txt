@@ -10,6 +10,7 @@ include_directories(${RAYLIB_PATH}/include include)
 add_executable(${PROJECT_NAME} src/main.cpp
         src/PingPong.cpp
         src/Asteroids.cpp
+        src/Menu.cpp
 )
 
 if (WIN32)

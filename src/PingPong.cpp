@@ -1,7 +1,6 @@
 ﻿#include "PingPong.h"
 #include "framework/GameObjectRect.h"
 #include "framework/GameObjectCircle.h"
-#include "new"
 #include <raymath.h>
 #include <raylib.h>
 
