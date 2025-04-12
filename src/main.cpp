@@ -13,7 +13,8 @@ int main()
     SetWindowState(FLAG_VSYNC_HINT);
     SetTargetFPS(60);
 
-    GameBase* game = new PingPong();
+    ArenaAllocator arena(2048);
+    GameBase* game = arena.Allocate<Asteroids>(&arena);
 
     while (!WindowShouldClose())
     {
@@ -21,8 +22,7 @@ int main()
         game->DrawGame();
     }
 
-    delete game;
-
+    arena.Reset();
     CloseWindow();
     return 0;
 }

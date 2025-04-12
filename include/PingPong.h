@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "framework/GameBase.h"
+#include "memory/ArenaAllocator.h"
 
 class GameObjectRect;
 class GameObjectCircle;
@@ -8,8 +9,7 @@ class GameObjectCircle;
 class PingPong : public GameBase
 {
 public:
-    PingPong();
-    ~PingPong() override;
+    explicit PingPong(ArenaAllocator* arena);
     void UpdateGame(float deltaTime) override;
     void DrawGame() override;
 

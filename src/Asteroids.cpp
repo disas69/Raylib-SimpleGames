@@ -116,18 +116,18 @@ void Rock::Hit()
 }
 
 // Game implementation
-Asteroids::Asteroids()
+Asteroids::Asteroids(ArenaAllocator* arena) : GameBase(arena)
 {
-    m_player = new GameObjectRect(ORANGE, AsteroidsSettings::PLAYER_WIDTH, AsteroidsSettings::PLAYER_HEIGHT);
+    m_player = m_arena->Allocate<GameObjectRect>(ORANGE, AsteroidsSettings::PLAYER_WIDTH, AsteroidsSettings::PLAYER_HEIGHT);
     m_player->SetPosition({m_screenWidth / 2.f - AsteroidsSettings::PLAYER_WIDTH / 2.f, m_screenHeight / 2.f});
 
-    m_bullets = new Bullet[AsteroidsSettings::BULLETS_POOL_SIZE];
+    m_bullets = m_arena->AllocateArray<Bullet>(AsteroidsSettings::BULLETS_POOL_SIZE);
     for (int i = 0; i < AsteroidsSettings::BULLETS_POOL_SIZE; ++i)
     {
         m_bullets[i].Init(BLUE, 6, m_screenWidth, m_screenHeight);
     }
 
-    m_rocks = new Rock[AsteroidsSettings::ROCKS_POOL_SIZE];
+    m_rocks = m_arena->AllocateArray<Rock>(AsteroidsSettings::ROCKS_POOL_SIZE);
     for (int i = 0; i < AsteroidsSettings::ROCKS_POOL_SIZE; ++i)
     {
         m_rocks[i].Init(DARKGRAY, m_screenWidth, m_screenHeight);
@@ -137,13 +137,6 @@ Asteroids::Asteroids()
     {
         SpawnRock();
     }
-}
-
-Asteroids::~Asteroids()
-{
-    delete m_player;
-    delete[] m_bullets;
-    delete[] m_rocks;
 }
 
 void Asteroids::UpdateGame(float deltaTime)

@@ -43,8 +43,7 @@ private:
 class Asteroids : public GameBase
 {
 public:
-    Asteroids();
-    ~Asteroids() override;
+    Asteroids(ArenaAllocator* arena);
     void UpdateGame(float deltaTime) override;
     void DrawGame() override;
 
