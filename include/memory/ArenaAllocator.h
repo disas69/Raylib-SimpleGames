@@ -11,7 +11,7 @@ public:
     ArenaAllocator(size_t size) : m_size(size), m_offset(0)
     {
         m_buffer = static_cast<char*>(std::malloc(size));
-        TraceLog(LOG_INFO, TextFormat("ArenaAllocator: allocated buffer of %d KB", size));
+        TraceLog(LOG_INFO, TextFormat("ArenaAllocator: allocated buffer of %d", size));
     }
 
     ~ArenaAllocator()
@@ -30,7 +30,7 @@ public:
         void* ptr = m_buffer + m_offset;
         m_offset += size;
 
-        TraceLog(LOG_INFO, TextFormat("ArenaAllocator: allocated size of %d KB, total allocation is %d KB", size, m_offset));
+        TraceLog(LOG_INFO, TextFormat("ArenaAllocator: allocated size of %d, total allocation is %d", size, m_offset));
 
         return ptr;
     }
