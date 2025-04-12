@@ -8,13 +8,12 @@ int main()
     constexpr int screenWidth = 800;
     constexpr int screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, "raylib games");
+    InitWindow(screenWidth, screenHeight, "Raylib Games");
 
     SetWindowState(FLAG_VSYNC_HINT);
     SetTargetFPS(60);
 
-    GameBase* game = new Asteroids();
-    game->InitGame();
+    GameBase* game = new PingPong();
 
     while (!WindowShouldClose())
     {
@@ -22,7 +21,6 @@ int main()
         game->DrawGame();
     }
 
-    game->UnloadGame();
     delete game;
 
     CloseWindow();

@@ -2,7 +2,6 @@
 
 #include "framework/GameBase.h"
 #include "framework/GameObjectCircle.h"
-#include <raylib.h>
 
 class GameObjectRect;
 
@@ -44,18 +43,15 @@ private:
 class Asteroids : public GameBase
 {
 public:
-    void InitGame() override;
+    Asteroids();
+    ~Asteroids() override;
     void UpdateGame(float deltaTime) override;
     void DrawGame() override;
-    void UnloadGame() override;
 
 private:
     GameObjectRect* m_player = nullptr;
     Bullet* m_bullets = nullptr;
     Rock* m_rocks = nullptr;
-
-    float m_screenWidth = 0;
-    float m_screenHeight = 0;
 
     float m_time = 0;
     float m_lastSpawnTime = 0;

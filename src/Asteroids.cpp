@@ -116,11 +116,8 @@ void Rock::Hit()
 }
 
 // Game implementation
-void Asteroids::InitGame()
+Asteroids::Asteroids()
 {
-    m_screenWidth = GetScreenWidth();
-    m_screenHeight = GetScreenHeight();
-
     m_player = new GameObjectRect(ORANGE, AsteroidsSettings::PLAYER_WIDTH, AsteroidsSettings::PLAYER_HEIGHT);
     m_player->SetPosition({m_screenWidth / 2.f - AsteroidsSettings::PLAYER_WIDTH / 2.f, m_screenHeight / 2.f});
 
@@ -140,6 +137,13 @@ void Asteroids::InitGame()
     {
         SpawnRock();
     }
+}
+
+Asteroids::~Asteroids()
+{
+    delete m_player;
+    delete[] m_bullets;
+    delete[] m_rocks;
 }
 
 void Asteroids::UpdateGame(float deltaTime)
@@ -293,13 +297,6 @@ void Asteroids::DrawGame()
     m_player->Draw();
 
     EndDrawing();
-}
-
-void Asteroids::UnloadGame()
-{
-    delete m_player;
-    delete[] m_bullets;
-    delete[] m_rocks;
 }
 
 Vector2 Asteroids::GetMovementDirection() const

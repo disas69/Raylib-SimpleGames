@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "framework/GameBase.h"
-#include <raylib.h>
 
 class GameObjectRect;
 class GameObjectCircle;
@@ -9,10 +8,10 @@ class GameObjectCircle;
 class PingPong : public GameBase
 {
 public:
-    void InitGame() override;
+    PingPong();
+    ~PingPong() override;
     void UpdateGame(float deltaTime) override;
     void DrawGame() override;
-    void UnloadGame() override;
 
 private:
     GameObjectRect* m_localPlayer = nullptr;
@@ -20,9 +19,6 @@ private:
     GameObjectCircle* m_ball = nullptr;
 
     Vector2 m_ballDirection = {0.f, 0.f};
-
-    float m_screenWidth = 0;
-    float m_screenHeight = 0;
 
     int m_localPlayerScore = 0;
     int m_botPlayerScore = 0;

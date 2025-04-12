@@ -13,11 +13,8 @@ constexpr int BALL_RADIUS = 20;
 constexpr int BALL_SPEED = 300;
 }  // namespace PingPongSettings
 
-void PingPong::InitGame()
+PingPong::PingPong()
 {
-    m_screenWidth = GetScreenWidth();
-    m_screenHeight = GetScreenHeight();
-
     m_localPlayer = new GameObjectRect(BLUE, PingPongSettings::PLAYER_WIDTH, PingPongSettings::PLAYER_HEIGHT);
     m_localPlayer->SetPosition({PingPongSettings::PLAYER_WIDTH / 2 + 25, m_screenHeight / 2 - PingPongSettings::PLAYER_HEIGHT / 2});
 
@@ -26,6 +23,13 @@ void PingPong::InitGame()
 
     m_ball = new GameObjectCircle(DARKGRAY, PingPongSettings::BALL_RADIUS);
     ResetGame();
+}
+
+PingPong::~PingPong()
+{
+    delete m_localPlayer;
+    delete m_botPlayer;
+    delete m_ball;
 }
 
 void PingPong::UpdateGame(const float deltaTime)
@@ -48,7 +52,7 @@ void PingPong::DrawGame()
     ClearBackground(RAYWHITE);
     DrawRectangle(m_screenWidth / 2 - 2, 0, 4, m_screenHeight, GRAY);
     DrawText(TextFormat("%d", m_localPlayerScore), m_screenWidth / 2 - 100, 20, 40, BLUE);
-    DrawText(TextFormat("%d", m_botPlayerScore), m_screenWidth / 2 + 50, 20, 40, RED);
+    DrawText(TextFormat("%d", m_botPlayerScore), m_screenWidth / 2 + 80, 20, 40, RED);
 
     // Draw players and ball
     m_localPlayer->Draw();
@@ -56,13 +60,6 @@ void PingPong::DrawGame()
     m_ball->Draw();
 
     EndDrawing();
-}
-
-void PingPong::UnloadGame()
-{
-    delete m_localPlayer;
-    delete m_botPlayer;
-    delete m_ball;
 }
 
 void PingPong::ResetGame()
