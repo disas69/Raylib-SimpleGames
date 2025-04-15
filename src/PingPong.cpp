@@ -16,10 +16,10 @@ constexpr int BALL_SPEED = 300;
 PingPong::PingPong(ArenaAllocator& arena) : GameBase(arena)
 {
     m_localPlayer = m_arena.Allocate<GameObjectRect>(BLUE, PingPongSettings::PLAYER_WIDTH, PingPongSettings::PLAYER_HEIGHT);
-    m_localPlayer->SetPosition({PingPongSettings::PLAYER_WIDTH / 2 + 25, m_screenHeight / 2 - PingPongSettings::PLAYER_HEIGHT / 2});
+    m_localPlayer->SetPosition({PingPongSettings::PLAYER_WIDTH / 2 + 25, m_screenHeight / 2.f});
 
     m_botPlayer = m_arena.Allocate<GameObjectRect>(RED, PingPongSettings::PLAYER_WIDTH, PingPongSettings::PLAYER_HEIGHT);
-    m_botPlayer->SetPosition({m_screenWidth - PingPongSettings::PLAYER_WIDTH / 2 - 25, m_screenHeight / 2 - PingPongSettings::PLAYER_HEIGHT / 2});
+    m_botPlayer->SetPosition({m_screenWidth - PingPongSettings::PLAYER_WIDTH / 2 - 25, m_screenHeight / 2.f});
 
     m_ball = m_arena.Allocate<GameObjectCircle>(DARKGRAY, PingPongSettings::BALL_RADIUS);
     ResetGame();
@@ -149,7 +149,7 @@ void PingPong::UpdateBotPlayer(const float deltaTime) const
         {
             newPosition.y -= PingPongSettings::PLAYER_SPEED * deltaTime;
         }
-        else if (ballPosition.y > m_botPlayer->GetPosition().y + botPlayerRect.height)
+        else if (ballPosition.y > m_botPlayer->GetPosition().y)
         {
             newPosition.y += PingPongSettings::PLAYER_SPEED * deltaTime;
         }

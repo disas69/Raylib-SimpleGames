@@ -13,16 +13,16 @@ public:
     virtual void Draw() const = 0;
     virtual ~GameObject2D() = default;
 
-    void SetActive(const bool isActive) { this->m_isActive = isActive; }
+    void SetActive(const bool isActive) { m_isActive = isActive; }
     bool IsActive() const { return m_isActive; }
 
-    void SetPosition(const Vector2 position) { this->m_position = position; }
+    void SetPosition(const Vector2 position) { m_position = position; }
     Vector2 GetPosition() const { return m_position; }
 
     float GetRotation() const { return m_rotation; }
-    void SetRotation(const float rotation) { this->m_rotation = rotation; }
+    void SetRotation(const float rotation) { m_rotation = rotation; }
 
-    void SetColor(const Color& color) { this->m_color = color; }
+    void SetColor(const Color& color) { m_color = color; }
     Color GetColor() const { return m_color; }
 
 protected:
