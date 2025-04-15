@@ -6,9 +6,9 @@
 
 namespace RaylibGames
 {
-static const std::vector<const char*> GAME_NAMES = {"Asteroids", "Pong"};
+inline const std::vector<const char*> GAME_NAMES = {"Asteroids", "Pong"};
 
-static GameBase* CreateGame(const char* gameName, ArenaAllocator& arena)
+inline GameBase* CreateGame(const char* gameName, ArenaAllocator& arena)
 {
     if (gameName == GAME_NAMES[0])
     {
