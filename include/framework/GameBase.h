@@ -6,7 +6,7 @@
 class GameBase
 {
 public:
-    explicit GameBase(ArenaAllocator* arena) : m_arena(arena)
+    explicit GameBase(ArenaAllocator& arena) : m_arena(arena)
     {
         m_screenWidth = GetScreenWidth();
         m_screenHeight = GetScreenHeight();
@@ -17,7 +17,7 @@ public:
     bool ShouldClose() const { return m_shouldClose; }
 
 protected:
-    ArenaAllocator* m_arena = nullptr;
+    ArenaAllocator& m_arena;
 
     float m_screenWidth = 0;
     float m_screenHeight = 0;

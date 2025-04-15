@@ -1,28 +1,7 @@
 #include "framework/GameBase.h"
-#include "PingPong.h"
-#include "Asteroids.h"
 #include "Menu.h"
-#include <vector>
+#include "RaylibGames.h"
 #include <raylib.h>
-
-namespace RaylibGames
-{
-static const std::vector<const char*> GAME_NAMES = {"Asteroids", "Pong"};
-
-static GameBase* CreateGame(const char* gameName, ArenaAllocator& arena)
-{
-    if (gameName == GAME_NAMES[0])
-    {
-        return arena.Allocate<Asteroids>(&arena);
-    }
-    if (gameName == GAME_NAMES[1])
-    {
-        return arena.Allocate<PingPong>(&arena);
-    }
-
-    return nullptr;
-}
-}  // namespace RaylibGames
 
 int main()
 {
@@ -35,9 +14,10 @@ int main()
     SetWindowState(FLAG_VSYNC_HINT);
     SetTargetFPS(60);
 
-    GameBase* game = nullptr;
-    ArenaAllocator arena(2048);
+    ArenaAllocator arena(1024 * 5);
+
     Menu menu(title, RaylibGames::GAME_NAMES);
+    GameBase* game = nullptr;
 
     while (!WindowShouldClose())
     {

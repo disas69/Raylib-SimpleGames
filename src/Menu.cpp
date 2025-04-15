@@ -3,10 +3,9 @@
 #include <raygui.h>
 #include <raylib.h>
 
-Menu::Menu(const char* title, const std::vector<const char*>& options)
+Menu::Menu(const char* title, const std::vector<const char*>& options) : m_options(options)
 {
     m_title = title;
-    m_options = options;
 
     m_screenWidth = GetScreenWidth();
     m_screenHeight = GetScreenHeight();

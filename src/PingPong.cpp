@@ -13,15 +13,15 @@ constexpr int BALL_RADIUS = 20;
 constexpr int BALL_SPEED = 300;
 }  // namespace PingPongSettings
 
-PingPong::PingPong(ArenaAllocator* arena) : GameBase(arena)
+PingPong::PingPong(ArenaAllocator& arena) : GameBase(arena)
 {
-    m_localPlayer = m_arena->Allocate<GameObjectRect>(BLUE, PingPongSettings::PLAYER_WIDTH, PingPongSettings::PLAYER_HEIGHT);
+    m_localPlayer = m_arena.Allocate<GameObjectRect>(BLUE, PingPongSettings::PLAYER_WIDTH, PingPongSettings::PLAYER_HEIGHT);
     m_localPlayer->SetPosition({PingPongSettings::PLAYER_WIDTH / 2 + 25, m_screenHeight / 2 - PingPongSettings::PLAYER_HEIGHT / 2});
 
-    m_botPlayer = m_arena->Allocate<GameObjectRect>(RED, PingPongSettings::PLAYER_WIDTH, PingPongSettings::PLAYER_HEIGHT);
+    m_botPlayer = m_arena.Allocate<GameObjectRect>(RED, PingPongSettings::PLAYER_WIDTH, PingPongSettings::PLAYER_HEIGHT);
     m_botPlayer->SetPosition({m_screenWidth - PingPongSettings::PLAYER_WIDTH / 2 - 25, m_screenHeight / 2 - PingPongSettings::PLAYER_HEIGHT / 2});
 
-    m_ball = m_arena->Allocate<GameObjectCircle>(DARKGRAY, PingPongSettings::BALL_RADIUS);
+    m_ball = m_arena.Allocate<GameObjectCircle>(DARKGRAY, PingPongSettings::BALL_RADIUS);
     ResetGame();
 }
 

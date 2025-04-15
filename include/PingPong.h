@@ -9,7 +9,7 @@ class GameObjectCircle;
 class PingPong : public GameBase
 {
 public:
-    explicit PingPong(ArenaAllocator* arena);
+    explicit PingPong(ArenaAllocator& arena);
     void UpdateGame(float deltaTime) override;
     void DrawGame() override;
 
