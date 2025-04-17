@@ -1,5 +1,6 @@
 ﻿#include "Asteroids.h"
 #include "framework/GameObjectRect.h"
+#include <raygui.h>
 #include <raymath.h>
 
 namespace AsteroidsSettings
@@ -288,6 +289,12 @@ void Asteroids::DrawGame()
     }
 
     m_player->Draw();
+
+    // Draw close button
+    if (GuiButton({m_screenWidth - 50, 20, 30, 30}, "x"))
+    {
+        m_shouldClose = true;
+    }
 
     EndDrawing();
 }

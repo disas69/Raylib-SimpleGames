@@ -1,6 +1,7 @@
 ﻿#include "PingPong.h"
 #include "framework/GameObjectRect.h"
 #include "framework/GameObjectCircle.h"
+#include <raygui.h>
 #include <raymath.h>
 #include <raylib.h>
 
@@ -51,6 +52,12 @@ void PingPong::DrawGame()
     m_localPlayer->Draw();
     m_botPlayer->Draw();
     m_ball->Draw();
+
+    // Draw close button
+    if (GuiButton({m_screenWidth - 50, 20, 30, 30}, "x"))
+    {
+        m_shouldClose = true;
+    }
 
     EndDrawing();
 }
