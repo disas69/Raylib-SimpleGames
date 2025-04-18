@@ -14,6 +14,8 @@ public:
 
     virtual void UpdateGame(float deltaTime) = 0;
     virtual void DrawGame() = 0;
+
+
     bool ShouldClose() const { return m_shouldClose; }
 
 protected:

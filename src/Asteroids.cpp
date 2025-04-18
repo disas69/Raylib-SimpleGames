@@ -123,18 +123,18 @@ Asteroids::Asteroids(ArenaAllocator& arena) : GameBase(arena)
     m_player->SetPosition({m_screenWidth / 2.f - AsteroidsSettings::PLAYER_WIDTH / 2.f, m_screenHeight / 2.f});
 
     m_bullets = m_arena.AllocateArray<Bullet>(AsteroidsSettings::BULLETS_POOL_SIZE);
-    for (int i = 0; i < AsteroidsSettings::BULLETS_POOL_SIZE; ++i)
+    for (size_t i = 0; i < AsteroidsSettings::BULLETS_POOL_SIZE; ++i)
     {
         m_bullets[i].Init(BLUE, 6, m_screenWidth, m_screenHeight);
     }
 
     m_rocks = m_arena.AllocateArray<Rock>(AsteroidsSettings::ROCKS_POOL_SIZE);
-    for (int i = 0; i < AsteroidsSettings::ROCKS_POOL_SIZE; ++i)
+    for (size_t i = 0; i < AsteroidsSettings::ROCKS_POOL_SIZE; ++i)
     {
         m_rocks[i].Init(DARKGRAY, m_screenWidth, m_screenHeight);
     }
 
-    for (int i = 0; i < AsteroidsSettings::ROCKS_START_COUNT; ++i)
+    for (size_t i = 0; i < AsteroidsSettings::ROCKS_START_COUNT; ++i)
     {
         SpawnRock();
     }
@@ -277,7 +277,7 @@ void Asteroids::DrawGame()
     ClearBackground(RAYWHITE);
     DrawText(TextFormat("%d", m_score), m_screenWidth / 2, 30, 40, LIGHTGRAY);
 
-    // Draw the game objects
+    // Draw game objects
     for (int i = 0; i < AsteroidsSettings::ROCKS_POOL_SIZE; ++i)
     {
         m_rocks[i].Draw();

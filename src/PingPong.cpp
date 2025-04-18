@@ -48,7 +48,7 @@ void PingPong::DrawGame()
     DrawText(TextFormat("%d", m_localPlayerScore), m_screenWidth / 2 - 100, 20, 40, BLUE);
     DrawText(TextFormat("%d", m_botPlayerScore), m_screenWidth / 2 + 80, 20, 40, RED);
 
-    // Draw players and ball
+    // Draw game objects
     m_localPlayer->Draw();
     m_botPlayer->Draw();
     m_ball->Draw();
