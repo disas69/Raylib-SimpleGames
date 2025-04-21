@@ -27,4 +27,4 @@ jobs:
       with:
         name: ${{ matrix.os }}-build-artifacts
         path: |
-          build/${{env.BUILD_TYPE}}/*
+          build/${{env.BUILD_TYPE}}/
