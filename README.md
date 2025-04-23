@@ -1,4 +1,4 @@
-# RaylibGames
+# Raylib Simple Games
 
 A collection of simple games and experiments built using [raylib](https://www.raylib.com/). 
 
