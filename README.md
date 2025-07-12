@@ -1,10 +1,8 @@
 # Raylib Simple Games
 
-A collection of simple games and experiments built using [raylib](https://www.raylib.com/). 
+A collection of simple cross-platform games built using [raylib](https://www.raylib.com/). 
 
 This repository is intended for learning the raylib library and practicing the [**arena allocator**](include/memory/ArenaAllocator.h) principle. 
-
-Ready to be built on Windows and MacOS.
 
 ## Included Games
 
